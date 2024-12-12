@@ -1,6 +1,7 @@
 package com.github.guronas.telegram.bot.elements.model;
 
 import com.github.guronas.telegram.bot.elements.exception.TelegramElementsRuntimeException;
+import com.github.guronas.telegram.bot.elements.parameter.DynamicParameters;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -26,28 +27,30 @@ public record MessageElement(
 	}
 
 	@Override
-	public BotApiMethod<?> build(Map<String, String> params) {
+	public BotApiMethod<?> build(Map<String, String> params, Map<String, DynamicParameters> dynamicParameters) {
 		return switch (action) {
 			case DELETE -> new DeleteMessage(params.get(CHAT_ID_KEY), Integer.valueOf(params.get(MESSAGE_ID_KEY)));
 			case EDIT -> EditMessageText.builder()
 					.chatId(Element.getParameterOrThrow(params, CHAT_ID_KEY))
 					.messageId(Integer.valueOf(Element.getParameterOrThrow(params, MESSAGE_ID_KEY)))
 					.text(Element.buildTextOrGetEmpty(text, params))
-					.replyMarkup(buildEditedInlineKeyboard(replyKeyboardElement, params))
+					.replyMarkup(buildEditedInlineKeyboard(replyKeyboardElement, params, dynamicParameters))
 					.build();
 			case CREATE -> SendMessage.builder()
 					.chatId(Element.getParameterOrThrow(params, CHAT_ID_KEY))
 					.text(Element.buildTextOrGetEmpty(text, params))
-					.replyMarkup(buildIfExist(replyKeyboardElement, params))
+					.replyMarkup(buildIfExist(replyKeyboardElement, params, dynamicParameters))
 					.build();
 		};
 	}
 
-	private InlineKeyboardMarkup buildEditedInlineKeyboard(Element<? extends ReplyKeyboard> replyKeyboardElement, Map<String, String> params) {
+	private InlineKeyboardMarkup buildEditedInlineKeyboard(Element<? extends ReplyKeyboard> replyKeyboardElement,
+														   Map<String, String> params,
+														   Map<String, DynamicParameters> dynamicParameters) {
 		if (Objects.isNull(replyKeyboardElement)) {
 			return null;
 		}
-		ReplyKeyboard replyKeyboard = replyKeyboardElement.build(params);
+		ReplyKeyboard replyKeyboard = replyKeyboardElement.build(params, dynamicParameters);
 		if (!(replyKeyboard instanceof InlineKeyboardMarkup inlineKeyboardMarkup)) {
 			throw new TelegramElementsRuntimeException("Invalid reply markup type [%s] for EditMessageText bot API method", replyKeyboard.getClass());
 		}

@@ -2,7 +2,7 @@ package com.github.guronas.telegram.bot.elements.converter;
 
 import com.github.guronas.telegram.bot.elements.model.ElementType;
 import com.github.guronas.telegram.bot.elements.model.TextElement;
-import com.github.guronas.telegram.bot.elements.parser.ElementFactory;
+import com.github.guronas.telegram.bot.elements.core.ElementFactory;
 
 public class TextConverter implements ElementConverter<TextElement, String> {
 

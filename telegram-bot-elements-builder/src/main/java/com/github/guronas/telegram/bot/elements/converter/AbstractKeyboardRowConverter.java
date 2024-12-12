@@ -3,12 +3,13 @@ package com.github.guronas.telegram.bot.elements.converter;
 import com.github.guronas.telegram.bot.elements.exception.ElementConversionException;
 import com.github.guronas.telegram.bot.elements.model.Element;
 import com.github.guronas.telegram.bot.elements.model.ElementType;
-import com.github.guronas.telegram.bot.elements.parser.ElementFactory;
+import com.github.guronas.telegram.bot.elements.core.ElementFactory;
 import com.github.guronas.telegram.bot.elements.util.ElementUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public abstract class AbstractKeyboardRowConverter<T extends Element<?>, B extends Element<?>> implements ListConverter<T> {
@@ -21,7 +22,7 @@ public abstract class AbstractKeyboardRowConverter<T extends Element<?>, B exten
 			List<B> buttons = rawContent.stream()
 					.filter(rootButtonElement -> rootButtonElement instanceof Map<?, ?>)
 					.map(rootButtonElement -> ((Map<?, ?>) rootButtonElement))
-					.map(rootButtonElement -> ElementUtils.getObjectFromMapIfExists(rootButtonElement, buttonType.getTypeName()))
+					.map(rootButtonElement -> rootButtonElement.get(buttonType.getTypeName()))
 					.map(button -> elementFactory.<B, Object>createElement(buttonType, button))
 					.toList();
 

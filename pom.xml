@@ -5,7 +5,7 @@
 
     <groupId>com.github.guronas</groupId>
     <artifactId>telegram-bot-elements</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
     <name>TelegramBotElements</name>
     <description>A library for building Telegram bot UI elements in declarative way</description>
