@@ -2,7 +2,7 @@ package com.github.guronas.telegram.bot.elements.converter;
 
 import com.github.guronas.telegram.bot.elements.exception.ElementConversionException;
 import com.github.guronas.telegram.bot.elements.model.Element;
-import com.github.guronas.telegram.bot.elements.parser.ElementFactory;
+import com.github.guronas.telegram.bot.elements.core.ElementFactory;
 
 public interface ElementConverter<E extends Element<?>, C> {
 

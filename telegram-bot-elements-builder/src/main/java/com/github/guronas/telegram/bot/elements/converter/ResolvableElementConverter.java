@@ -3,7 +3,7 @@ package com.github.guronas.telegram.bot.elements.converter;
 import com.github.guronas.telegram.bot.elements.model.Element;
 import com.github.guronas.telegram.bot.elements.model.ElementType;
 import com.github.guronas.telegram.bot.elements.model.ResolvableElement;
-import com.github.guronas.telegram.bot.elements.parser.ElementFactory;
+import com.github.guronas.telegram.bot.elements.core.ElementFactory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

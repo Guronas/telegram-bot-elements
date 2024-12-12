@@ -1,4 +1,4 @@
-package com.github.guronas.telegram.bot.elements.parser;
+package com.github.guronas.telegram.bot.elements.core;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.converter.*;

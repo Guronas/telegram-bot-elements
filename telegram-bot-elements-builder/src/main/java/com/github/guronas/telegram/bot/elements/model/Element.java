@@ -1,5 +1,6 @@
 package com.github.guronas.telegram.bot.elements.model;
 
+import com.github.guronas.telegram.bot.elements.parameter.DynamicParameters;
 import com.github.guronas.telegram.bot.elements.exception.MandatoryParameterException;
 
 import java.util.Map;
@@ -14,6 +15,10 @@ public interface Element<T> {
 
 	default T build(Map<String, String> params) {
 		throw new UnsupportedOperationException();
+	}
+
+	default T build(Map<String, String> params, Map<String, DynamicParameters> dynamicParameters) {
+		return build(params);
 	}
 
 	static String getParameterOrThrow(Map<String, String> params, String parameterName) {

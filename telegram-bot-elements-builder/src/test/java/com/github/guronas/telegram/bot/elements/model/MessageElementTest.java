@@ -7,7 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.github.guronas.telegram.bot.elements.TestUtils.*;
 import static com.github.guronas.telegram.bot.elements.model.Element.EMPTY_TEXT;
@@ -29,7 +31,7 @@ public class MessageElementTest {
 				null
 		);
 
-		BotApiMethod<?> message = element.build(getTestParams());
+		BotApiMethod<?> message = element.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters()));
 
 		assertInstanceOf(DeleteMessage.class, message);
 		DeleteMessage deleteMessage = (DeleteMessage) message;
@@ -40,33 +42,35 @@ public class MessageElementTest {
 	@Test
 	void buildEditMessageText() {
 		TextElement textElement = getTestTextElement();
-		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()));
+		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()), TEST_DYNAMIC_ROWS_ID,
+				dynamicParameters -> Collections.emptyList());
 		MessageElement messageElement = new MessageElement(
 				MessageAction.EDIT,
 				textElement,
 				replyKeyboardElement
 		);
 
-		BotApiMethod<?> message = messageElement.build(getTestParams());
+		BotApiMethod<?> message = messageElement.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters()));
 
 		assertInstanceOf(EditMessageText.class, message);
 		EditMessageText editMessageText = (EditMessageText) message;
 		assertEquals(TEST_CHAT_ID, editMessageText.getChatId());
 		assertEquals(Integer.valueOf(TEST_MESSAGE_ID), editMessageText.getMessageId());
 		assertEquals(TEST_TEXT, editMessageText.getText());
-		assertEquals(replyKeyboardElement.build(getTestParams()), editMessageText.getReplyMarkup());
+		assertEquals(replyKeyboardElement.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters())), editMessageText.getReplyMarkup());
 	}
 
 	@Test
 	void buildEditMessageWithEmptyText() {
-		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()));
+		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()), TEST_DYNAMIC_ROWS_ID,
+				dynamicParameters -> Collections.emptyList());
 		MessageElement messageElement = new MessageElement(
 				MessageAction.EDIT,
 				null,
 				replyKeyboardElement
 		);
 
-		BotApiMethod<?> message = messageElement.build(getTestParams());
+		BotApiMethod<?> message = messageElement.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters()));
 
 		assertInstanceOf(EditMessageText.class, message);
 		EditMessageText editMessageText = (EditMessageText) message;
@@ -76,32 +80,34 @@ public class MessageElementTest {
 	@Test
 	void buildSendMessage() {
 		TextElement textElement = getTestTextElement();
-		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()));
+		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()), TEST_DYNAMIC_ROWS_ID,
+				dynamicParameters -> Collections.emptyList());
 		MessageElement messageElement = new MessageElement(
 				MessageAction.CREATE,
 				textElement,
 				replyKeyboardElement
 		);
 
-		BotApiMethod<?> message = messageElement.build(getTestParams());
+		BotApiMethod<?> message = messageElement.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters()));
 
 		assertInstanceOf(SendMessage.class, message);
 		SendMessage sendMessage = (SendMessage) message;
 		assertEquals(TEST_CHAT_ID, sendMessage.getChatId());
 		assertEquals(TEST_TEXT, sendMessage.getText());
-		assertEquals(replyKeyboardElement.build(getTestParams()), sendMessage.getReplyMarkup());
+		assertEquals(replyKeyboardElement.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters())), sendMessage.getReplyMarkup());
 	}
 
 	@Test
 	void buildSendMessageWithEmptyText() {
-		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()));
+		InlineKeyboardElement replyKeyboardElement = new InlineKeyboardElement(List.of(getTestInlineKeyboardRowElement()), TEST_DYNAMIC_ROWS_ID,
+				dynamicParameters -> Collections.emptyList());
 		MessageElement messageElement = new MessageElement(
 				MessageAction.CREATE,
 				null,
 				replyKeyboardElement
 		);
 
-		BotApiMethod<?> message = messageElement.build(getTestParams());
+		BotApiMethod<?> message = messageElement.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters()));
 
 		assertInstanceOf(SendMessage.class, message);
 		SendMessage sendMessage = (SendMessage) message;
@@ -110,7 +116,8 @@ public class MessageElementTest {
 
 	@Test
 	void buildEditedInlineKeyboardWithInvalidType() {
-		ReplyKeyboardMarkupElement replyKeyboardElement = new ReplyKeyboardMarkupElement(List.of(getTestKeyboardRowElement()), new BooleanElement(true));
+		ReplyKeyboardMarkupElement replyKeyboardElement = new ReplyKeyboardMarkupElement(List.of(getTestKeyboardRowElement()), new BooleanElement(true),
+				TEST_DYNAMIC_ROWS_ID, dynamicParameters -> Collections.emptyList());
 
 		MessageElement element = new MessageElement(
 				MessageAction.EDIT,
@@ -118,6 +125,6 @@ public class MessageElementTest {
 				replyKeyboardElement
 		);
 
-		assertThrows(TelegramElementsRuntimeException.class, () -> element.build(getTestParams()));
+		assertThrows(TelegramElementsRuntimeException.class, () -> element.build(getTestParams(), Map.of(TEST_DYNAMIC_ROWS_ID, getTestDynamicParameters())));
 	}
 }

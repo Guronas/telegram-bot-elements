@@ -2,7 +2,7 @@ package com.github.guronas.telegram.bot.elements.converter;
 
 import com.github.guronas.telegram.bot.elements.exception.ElementConversionException;
 import com.github.guronas.telegram.bot.elements.model.*;
-import com.github.guronas.telegram.bot.elements.parser.ElementFactory;
+import com.github.guronas.telegram.bot.elements.core.ElementFactory;
 import com.github.guronas.telegram.bot.elements.util.ElementUtils;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
@@ -16,11 +16,7 @@ public class MessageConverter implements MapConverter<MessageElement> {
 	@Override
 	public MessageElement convert(ElementFactory elementFactory, Map<?, ?> rawContent) throws ElementConversionException {
 		try {
-			Object rawAction = ElementUtils.getObjectFromMapIfExists(rawContent, ACTION_KEY);
-			if (Objects.nonNull(rawAction) && !(rawAction instanceof String)) {
-				throw new ElementConversionException("Unexpected type of message action: %s", rawAction.getClass());
-			}
-
+			String rawAction = ElementUtils.getObjectFromMapIfExists(rawContent, ACTION_KEY, String.class);
 			MessageAction action = rawAction == null ? MessageAction.CREATE : MessageAction.valueOf(((String) rawAction).toUpperCase());
 			if (action == MessageAction.DELETE) {
 				return new MessageElement(MessageAction.DELETE, null, null);
@@ -34,15 +30,15 @@ public class MessageConverter implements MapConverter<MessageElement> {
 
 	private MessageElement convertWithChildren(ElementFactory elementFactory, MessageAction action, Map<?, ?> rawContent)
 			throws ElementConversionException {
-		Object rawText = ElementUtils.getObjectFromMapIfExists(rawContent, ElementType.TEXT.getTypeName());
+		Object rawText = rawContent.get(ElementType.TEXT.getTypeName());
 		TextElement text = elementFactory.createElement(ElementType.TEXT, rawText);
 		return new MessageElement(action, text, convertReplyKeyBoardIfExist(elementFactory, rawContent));
 	}
 
 	private Element<? extends ReplyKeyboard> convertReplyKeyBoardIfExist(ElementFactory elementFactory, Map<?, ?> rawContent)
 			throws ElementConversionException {
-		Object rawReplyKeyboard = ElementUtils.getObjectFromMapIfExists(rawContent, REPLY_KEYBOARD_KEY);
-		if (Objects.isNull(rawReplyKeyboard) || !(rawReplyKeyboard instanceof Map<?, ?> replyKeyboard)) {
+		Map<?, ?> replyKeyboard = ElementUtils.getObjectFromMapIfExists(rawContent, REPLY_KEYBOARD_KEY, Map.class);
+		if (Objects.isNull(replyKeyboard)) {
 			return null;
 		}
 
