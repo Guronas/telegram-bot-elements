@@ -1,5 +1,6 @@
 package com.github.guronas.telegram.bot.elements.parameter;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 public class DynamicParameters {
 	private final List<Map<String, String>> parameters = new ArrayList<>();
