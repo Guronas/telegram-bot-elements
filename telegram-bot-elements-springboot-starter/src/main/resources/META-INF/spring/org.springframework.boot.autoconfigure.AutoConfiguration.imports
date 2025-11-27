@@ -1,1 +1,1 @@
-com.github.guronas.telegram.bot.elements.config.TelegramElementsConfiguration
+com.github.guronas.telegram.bot.elements.config.TelegramElementsAutoConfiguration

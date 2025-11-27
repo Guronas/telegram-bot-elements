@@ -6,7 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Setter
 @Getter
-@ConfigurationProperties(prefix = "elements")
+@ConfigurationProperties(prefix = "telegram.elements")
 public class TelegramElementsProperties {
+	private boolean enabled = true;
 	private String workingDirectory;
 }
